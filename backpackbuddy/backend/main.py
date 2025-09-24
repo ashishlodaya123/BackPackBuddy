@@ -5,9 +5,9 @@ from pydantic import BaseModel
 import json
 import io
 
-from backpackbuddy.backend.agents.itinerary_agent import generate_itinerary
-from backpackbuddy.backend.agents.repack_agent import generate_packing_list
-from backpackbuddy.backend.utils.pdf_generator import create_itinerary_pdf
+from backend.agents.itinerary_agent import generate_itinerary
+from backend.agents.repack_agent import generate_packing_list
+from backend.utils.pdf_generator import create_itinerary_pdf
 
 app = FastAPI(
     title="BackpackBuddy API",
@@ -49,6 +49,7 @@ def read_root():
 async def generate_itinerary_endpoint(request: ItineraryRequest):
     """Endpoint to generate a new travel itinerary."""
     try:
+        print(f"Generating itinerary for: {request.destination}")
         itinerary_result = generate_itinerary(
             destination=request.destination,
             travel_dates=request.travel_dates,
@@ -60,14 +61,18 @@ async def generate_itinerary_endpoint(request: ItineraryRequest):
             try:
                 itinerary_json = json.loads(itinerary_result)
             except json.JSONDecodeError:
+                print(f"Failed to parse JSON: {itinerary_result}")
                 raise HTTPException(status_code=500, detail="Agent returned a non-JSON string.")
         elif isinstance(itinerary_result, dict):
             itinerary_json = itinerary_result
         else:
+            print(f"Unknown data type returned: {type(itinerary_result)}")
             raise HTTPException(status_code=500, detail="Agent returned an unknown data type.")
 
+        print("Itinerary generated successfully")
         return itinerary_json
     except Exception as e:
+        print(f"Error in generate_itinerary_endpoint: {str(e)}")
         raise HTTPException(status_code=500, detail=f"An internal error occurred: {str(e)}")
 
 @app.post("/download-itinerary-pdf")
@@ -90,18 +95,23 @@ async def download_itinerary_pdf_endpoint(request: ItineraryData):
 async def generate_packing_list_endpoint(request: ItineraryData):
     """Endpoint to generate a packing list for a given itinerary."""
     try:
+        print("Generating packing list...")
         packing_list_result = generate_packing_list(request.itinerary)
 
         if isinstance(packing_list_result, str):
             try:
                 packing_list_json = json.loads(packing_list_result)
             except json.JSONDecodeError:
+                print(f"Failed to parse packing list JSON: {packing_list_result}")
                 raise HTTPException(status_code=500, detail="Agent returned a non-JSON string for packing list.")
         elif isinstance(packing_list_result, dict):
             packing_list_json = packing_list_result
         else:
+            print(f"Unknown packing list data type: {type(packing_list_result)}")
             raise HTTPException(status_code=500, detail="Agent returned an unknown data type for packing list.")
 
+        print("Packing list generated successfully")
         return packing_list_json
     except Exception as e:
+        print(f"Error in generate_packing_list_endpoint: {str(e)}")
         raise HTTPException(status_code=500, detail=f"An internal error occurred while generating packing list: {str(e)}")

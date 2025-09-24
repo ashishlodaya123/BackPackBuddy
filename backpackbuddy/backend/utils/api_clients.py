@@ -7,7 +7,7 @@ import requests
 from dotenv import load_dotenv
 
 from langchain_groq import ChatGroq
-from langchain_community.utilities.serper import SerperAPIWrapper
+from langchain_community.utilities import GoogleSerperAPIWrapper
 
 # Load environment variables from .env file
 load_dotenv()
@@ -31,10 +31,10 @@ def get_groq_llm() -> ChatGroq:
     """
     if not GROQ_API_KEY:
         raise ValueError("GROQ_API_KEY environment variable not set.")
-    return ChatGroq(api_key=GROQ_API_KEY)
+    return ChatGroq(api_key=GROQ_API_KEY, model_name=os.environ.get("GROQ_MODEL"))
 
 # --- Search Tool ---
-def get_serper_tool() -> SerperAPIWrapper:
+def get_serper_tool() -> GoogleSerperAPIWrapper:
     """
     Initializes and returns the Serper (Google Search) API wrapper.
 
@@ -42,11 +42,11 @@ def get_serper_tool() -> SerperAPIWrapper:
         ValueError: If the SERPER_API_KEY is not set.
 
     Returns:
-        SerperAPIWrapper: An instance of the SerperAPIWrapper.
+        GoogleSerperAPIWrapper: An instance of the GoogleSerperAPIWrapper.
     """
     if not SERPER_API_KEY:
         raise ValueError("SERPER_API_KEY environment variable not set.")
-    return SerperAPIWrapper(api_key=SERPER_API_KEY)
+    return GoogleSerperAPIWrapper(serper_api_key=SERPER_API_KEY)
 
 # --- Travel APIs ---
 def get_places_of_interest(lon: float, lat: float, radius: int = 5000, kinds: str = "interesting_places") -> list:
