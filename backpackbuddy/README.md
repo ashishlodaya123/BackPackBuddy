@@ -1,97 +1,178 @@
-# BackpackBuddy 🎒
+# 🎒 BackpackBuddy – Your AI Travel Companion
 
-BackpackBuddy is a free, autonomous, agentic AI system that generates personalized travel itineraries for budget-conscious backpackers. It helps users plan budget-friendly, authentic travel itineraries with high autonomy. It integrates free APIs and delivers dynamic itineraries, offline packs, maps, safety tips, and more.
+BackpackBuddy is an **AI-driven, autonomous travel planner** designed for backpackers who want smart, flexible, and budget-conscious trips. It generates **personalized itineraries**, uncovers hidden gems, creates offline survival packs, and can dynamically replan trips if conditions change.
+
+Powered by **Groq LLMs**, BackpackBuddy is fast, modular, and built to be extended or deployed easily.
+
+---
 
 ## ✨ Features
 
-*   **Dynamic Itinerary Builder**: Get a day-by-day plan with activities, transport, and timings based on your destination, dates, budget, and preferences.
-*   **AI-Powered Packing Lists**: Receive packing suggestions based on your itinerary and the weather forecast for your destination.
-*   **Offline Survival Pack**: Download a PDF with your itinerary, maps, and essential info for offline access.
-*   **Interactive Map View**: Visualize your entire trip with markers for each activity.
-*   **Budget-Aware Planning**: Choose from Strict, Chill, or YOLO budget modes for automatic balancing of expenses.
-*   **Autonomous Agent**: Built with LangChain and Groq for fast, intelligent travel planning.
+- 🗺️ **Dynamic Itinerary Builder**: Enter your destination, dates, and budget → receive a detailed day-by-day plan with transport and activities.
+- 💎 **Hidden Gems Mode**: Choose between mainstream routes or offbeat, authentic experiences.
+- 💸 **Budget-Aware Planning**: Options like “Strict,” “Chill,” or “YOLO” automatically balance food, accommodation, and travel expenses.
+- 📶 **Offline Survival Pack**: Downloadable PDF including itinerary, maps, emergency contacts, local phrases, and hostel info.
+- 🎭 **Local Culture Layer**: Discover events, festivals, and cultural highlights during your trip.
+- 🎒 **Packing List Generator**: Smart suggestions based on weather and planned activities.
+- 🚨 **Safety & Alerts**: Tips on local scams, safety advisories, and emergency numbers.
+- 🛏️ **Hostel & Social Layer**: Prioritizes hostels and nearby social spots for backpackers.
+- 🔄 **Autonomous Replanning**: Handles weather changes, budget adjustments, and unexpected events.
+
+---
 
 ## 🛠️ Tech Stack
 
-*   **Frontend**: React, Vite, TailwindCSS, shadcn/ui, Framer Motion, Leaflet.js
-*   **Backend**: Python, FastAPI, LangChain, Groq, Serper, OpenTripMap, OSRM
-*   **Deployment**: Docker
+**Frontend:**
 
-## 🚀 Getting Started
+- React + Vite
+- TailwindCSS + shadcn/ui for styling
+- Framer Motion for animations
+- Leaflet.js + OpenStreetMap for maps
 
-### Prerequisites
+**Backend:**
 
-*   [Docker](https://www.docker.com/get-started) (for Docker setup)
-*   [Node.js](https://nodejs.org/en/) (v18 or higher, for manual setup)
-*   [Python](https://www.python.org/downloads/) (v3.10 or higher, for manual setup)
-*   API Keys for Groq, Serper, and OpenTripMap
+- FastAPI (Python)
+- LangChain for agent orchestration
+- **Groq API** for LLM inference
+- Serper API for search
+- OpenTripMap API for attractions
+- OSRM API for routes and transit
+- WikiTravel Scraper for contextual info
+- ReportLab for PDF generation
 
-### 1. Installation
+**Infrastructure:**
 
-First, clone the repository and set up your environment variables.
+- Docker + Docker Compose
+- `.env` for API keys and configuration
+- GitHub Actions-ready for CI/CD
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/backpackbuddy.git
-    cd backpackbuddy
-    ```
+---
 
-2.  **Set up environment variables:**
-    This is required for both Docker and manual setup. Create a `.env` file in the root directory by copying the example:
-    ```bash
-    cp .env.example .env
-    ```
-    Open the `.env` file and add your API keys.
+## 📂 Project Structure
 
-### 2. Running the Application
+```
+backpackbuddy/
+│── backend/
+│   ├── main.py                # FastAPI entrypoint
+│   ├── agents/                # Agent logic
+│   │   ├── itinerary_agent.py
+│   │   ├── budget_agent.py
+│   │   ├── repack_agent.py
+│   ├── utils/                 # Helper modules
+│   │   ├── api_clients.py
+│   │   ├── pdf_generator.py
+│   │   ├── maps.py
+│   ├── tests/                 # Unit tests
+│   └── requirements.txt
+│
+│── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── ItineraryCard.jsx
+│   │   │   ├── MapView.jsx
+│   │   │   ├── BudgetToggle.jsx
+│   │   │   ├── PackingList.jsx
+│   │   └── pages/
+│   │       ├── Home.jsx
+│   │       ├── Results.jsx
+│   │       ├── OfflinePack.jsx
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+│
+│── .env.example
+│── .gitignore
+│── README.md
+│── docker-compose.yml
+```
 
-You can run BackpackBuddy using either Docker (recommended for a production-like experience) or manually for development.
+---
 
-#### Option A: Running with Docker
+## ⚙️ Setup & Installation
 
-This is the easiest way to get started. It builds the production versions of the frontend and backend and runs them in isolated containers.
+### 1. Clone the repository
 
-1.  **Build and run the containers:**
-    ```bash
-    docker-compose up --build
-    ```
-2.  **Access the application:**
-    The application will be available at `http://localhost:5173`.
-
-#### Option B: Manual Setup (for Development)
-
-This method is ideal for development, as it provides hot-reloading for both the frontend and backend. You will need two separate terminal windows.
-
-**Terminal 1: Run the Backend**
 ```bash
-# Navigate to the backend directory
+git clone https://github.com/yourusername/backpackbuddy.git
+cd backpackbuddy
+```
+
+### 2. Configure environment variables
+
+```bash
+cp .env.example .env
+```
+
+Populate `.env` with your keys:
+
+```env
+# LLM (Groq)
+GROQ_API_KEY=your_key_here
+GROQ_MODEL=llama3-70b-8192  # or any supported Groq model
+
+# Search
+SERPER_API_KEY=your_key_here
+
+# Travel APIs
+OPENTRIPMAP_API_KEY=your_key_here
+OSRM_API_URL=http://router.project-osrm.org
+```
+
+### 3. Running the Application
+
+#### Option A: Docker (Recommended)
+
+This is the easiest way to get started. It builds and runs the entire stack in containers.
+
+```bash
+docker-compose up --build
+```
+
+Access the app at `http://localhost:5173`.
+
+#### Option B: Manual Local Development
+
+Run the backend and frontend in two separate terminals for hot-reloading.
+
+**Backend:** `cd backend && pip install -r requirements.txt && uvicorn main:app --reload`
+**Frontend:** `cd frontend && npm install && npm run dev`
+
+---
+
+## 🧪 Tests
+
+```bash
 cd backend
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Run the FastAPI server
-uvicorn main:app --reload
+pytest
 ```
-The backend will be running at `http://localhost:8000`.
 
-**Terminal 2: Run the Frontend**
-```bash
-# Navigate to the frontend directory
-cd frontend
+---
 
-# Install Node.js dependencies
-npm install
+## 📸 Screenshots (to add)
 
-# Run the Vite development server
-npm run dev
-```
-The frontend will be available at `http://localhost:5173`.
+- `home.png` – Landing page
+- `results.png` – Sample itinerary
+- `offline_pack.png` – PDF survival pack
+
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a pull request.
+1. Fork the repository
+2. Create a feature branch (`feature/cool-idea`)
+3. Submit a Pull Request 🚀
+
+---
 
 ## 📜 License
 
-This project is licensed under the MIT License.
+MIT License – free to use, modify, and extend.
+
+---
+
+## 🙌 Credits
+
+- Maps: OpenStreetMap + Leaflet.js
+- Attractions: OpenTripMap API
+- Search: Serper API
+- LLM: Groq API
